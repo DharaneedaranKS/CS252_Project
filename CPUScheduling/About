@@ -9,3 +9,8 @@ Each task is assigned a priority and CPU burst. The following scheduling algorit
 Priorities range from 1 to 10, where a higher numeric value indicates a higher relative priority. For round-robin scheduling, 
 the length of a time quantum is 10 milliseconds.
 
+
+Crediting the references we use:
+1. Geeks for geeks
+2. Tutorials Point
+3. Java Point
