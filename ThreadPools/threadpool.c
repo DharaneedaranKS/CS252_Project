@@ -14,6 +14,7 @@
 
 sem_t semqueue;
 
+//Struct to keep track of how many tasks are in the queue and need a thread from the thread pool
 typedef struct 
 {
     void (*function)(void *p);
@@ -26,16 +27,16 @@ int deqcurpos = 0;
 int enqcurpos = 0;
 
 // the work queue
-task worktodo;
+task worktodo; //Used to store the work that has to be done, used in dequeue function
 
-task enqwork;
+task enqwork; //used in pool submit while submitting work to pool
 
 // the worker bee
 pthread_t bee1;
 pthread_t bee2;
 pthread_t bee3;
 
-int choosethread = 0;
+int choosethread = 0; //variable to keep track of how many threads are available
 
 // insert a task into the queue
 // returns 0 if successful or 1 otherwise, 
@@ -43,10 +44,10 @@ int enqueue(task t)
 {
     sem_wait(&semqueue);
     if(queuenum > 10){
-	sem_post(&semqueue);
+	sem_post(&semqueue); //Release semaphore
 	return 1;
     }
-    queue[enqcurpos] = t;
+    queue[enqcurpos] = t; //add task to work queue
     queuenum ++;
     enqcurpos = (enqcurpos + 1)%10;
     sem_post(&semqueue);
@@ -56,7 +57,7 @@ int enqueue(task t)
 // remove a task from the queue
 task dequeue() 
 {
-    worktodo = queue[deqcurpos];
+    worktodo = queue[deqcurpos]; //get task to be done
     deqcurpos = (deqcurpos + 1)%10;
     return worktodo;
 }
@@ -67,13 +68,13 @@ void *worker(void *param)
     task newwork;
     sem_wait(&semqueue);
     if(queuenum != 0){
-	queuenum--;
-	newwork = dequeue();
+	queuenum--; //reduce no of tasks in the queue
+	newwork = dequeue(); //obtain the task to be performed
 	(*newwork.function)(newwork.data);
 	//queuenum--;
     }
     sem_post(&semqueue);
-    pthread_exit(0);
+    pthread_exit(0); //terminates calling thread
 }
 
 /**
@@ -83,7 +84,7 @@ int pool_submit(void (*somefunction)(void *p), void *p)
 {
     enqwork.function = somefunction;
     enqwork.data = p;
-    int eq = enqueue(enqwork);
+    int eq = enqueue(enqwork); //returns 0 if entry to queue is successful otherwise returns 1
 
     if(choosethread  == 0){
     	pthread_create(&bee1,NULL,worker,NULL);
@@ -100,7 +101,7 @@ int pool_submit(void (*somefunction)(void *p), void *p)
 // initialize the thread pool
 void pool_init(void)
 {
-    sem_init(&semqueue,0,1);
+    sem_init(&semqueue,0,1); //Initialising semaphore which can't be shared between processes, with count as 1
 }
 
 // shutdown the thread pool
