@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,7 +14,7 @@ void fcfs(int n, int bt[])
 {
     //intialising or declaring variables required for computation
     int wt[n]; // wait time for each task
-    int total_wt=0; // total wait time 
+    int total_wt=0; // total wait time
     int total_bt=0; // total burst time
     wt[0] = 0; //initalising the wait time of the first task as 0 as its universally true
 
@@ -125,7 +127,7 @@ void sjf(int n, int bt[])
 {
     //declaring local variables used for computation throughout the function
     int order[n], wt[n], total_wt, total_bt, i, j, temp;
-    /* order - to decide and track the order in which the tasks are implemented 
+    /* order - to decide and track the order in which the tasks are implemented
     wt - wait time of each induvitual task
     total_wt - total waiting time, total_bt -  total burst time
     i, j - loop variables
@@ -195,7 +197,7 @@ void priority(int n, int bt[], int prior[])
 {
     //declaring variables
     int order[n], wt[n], total_wt, total_bt,total_rt=0, i, j, temp;
-        /* order - to decide and track the order in which the tasks are implemented 
+        /* order - to decide and track the order in which the tasks are implemented
     wt - wait time of each induvitual task
     total_wt - total waiting time, total_bt -  total burst time
     i, j - loop variables
@@ -267,9 +269,9 @@ void round_robin_for_priority(int n, int start, int bt[], int quant, int sum, in
     int i, y=n;
     int total_wt=0, total_tat=0, total_rt=0;
 
-    rt[start] = 0;
+    rt[start] = 0 + sum;
     copy_bt[0]=bt[start];
-    for(int j=start+1;j<n;j++)
+    for(int j=start+1;j<n+start;j++)
     {
         rt[j] = rt[j-1] + min(quant, bt[j-1]);
         copy_bt[j-start]=bt[j];
@@ -278,9 +280,9 @@ void round_robin_for_priority(int n, int start, int bt[], int quant, int sum, in
     {
         if(copy_bt[i] <= quant && copy_bt[i] > 0) // define the conditions
         {
-            tat[i]=sum+copy_bt[i];
+            tat[i+start]=sum+copy_bt[i];
             sum = sum + copy_bt[i];
-            wt[i]=sum-bt[i+start];
+            wt[i+start]=sum-bt[i+start];
             copy_bt[i] = 0;
             count=1;
         }
@@ -312,7 +314,7 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
 {
     //declaring variables
     int order[n], wt[n],rt[n],tat[n], total_wt, total_tat, total_rt =0, i, j, temp;
-        /* order - to decide and track the order in which the tasks are implemented 
+        /* order - to decide and track the order in which the tasks are implemented
     wt - wait time of each induvitual task
     total_wt - total waiting time, total_bt -  total burst time
     i, j - loop variables
@@ -346,14 +348,14 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
     // intial task waiting time intialised to 0 as univerally true
     wt[0] = 0;
     rt[0]=0;
-    
+
     for(int j=0;j<n;j++)
       {
         int start =j;
         int end =j;
         for(int k=j+1;k<n;k++)
           {
-            if(bt[k]==bt[j])
+            if(prior[k]==prior[j])
               end =k;
             else
               break;
@@ -371,7 +373,7 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
             tat[j]=wt[j]+bt[j];
           }
         }
-          
+
         else
         {
           round_robin_for_priority(end-start+1, start, bt, quantum, wt[start-1]+bt[start-1], wt, rt, tat);
@@ -379,7 +381,7 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
         }
       }
     //Computation fo wait time for each tasl
-    
+
     //printing out the output
     printf("\n\n\nFor Priority based round robin Scheduling\n");
     printf("Processes   Burst time   Priorirty   Waiting time  Response Time   Turn around time\n");
@@ -409,36 +411,36 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
     printf("Average response time = %d ",r);
 }
 
-
 int main()
 {
-    /*printf("Please enter the no of processes");
     int n;
+    printf("Please enter the no of processes: ");
     scanf("%d", &n);
     int bt[n], prior[n], copy_bt[n], bt_sjf[n], prior_copy[n];
-    printf("Please enter the priority and burst time of the above processes: \n");
+    printf("\nEnter details of each task in the order of T1 to T%d as : <priority> <burst time>\n" ,n);
     for(int i =0; i<n;i++)
     {
-        printf("Process %d: ", i+1);
-        scanf("%d %d",&prior[i], &bt[i]); 
+        printf("T%d: ", i+1);
+        scanf("%d %d",&prior[i], &bt[i]);
         copy_bt[i]=bt[i];
         bt_sjf[i]=bt[i];
         prior_copy[i]=prior[i];
-            
-    }*/
-     
-    int n = 5;
+
+    }
+
+    /*int n = 5;
     int bt[5]={20,30,10,15,90};
     int copy_bt[5]={20,30,10,15,90};
     int bt_sjf[5]={20,30,10,15,90};
     int prior[5] = {8, 3, 1, 3, 2};
-    int prior_copy[5] ={8, 3, 1, 3, 2};
-    int quantum = 20;
+    int prior_copy[5] ={8, 3, 1, 3, 2};*/
+    int quantum = 10;
     fcfs (n, bt);
     round_robin(n, copy_bt, quantum,0);
     sjf (n, bt_sjf);
     priority(n, copy_bt, prior);
     priority_round_robin(n, bt, prior_copy, quantum);
-    
+
 
 }
+
