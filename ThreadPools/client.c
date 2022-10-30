@@ -129,7 +129,7 @@ int main(void)
     // 2nd test
     for (i = 0; i < NTASK; ++i) {
         num[i] = i;
-        if (pool_submit(number, num+i))
+        if (pool_submit(number, num+i)) //since pool_submit returns 1 if task is not added to queue
             fprintf(stderr, "%d: Queue is full.\n", i);
     }
     
@@ -141,6 +141,6 @@ int main(void)
     pool_submit(donothing, NULL);
     pool_submit(pooh, NULL);
 
-    pool_shutdown();
+    pool_shutdown(); //closes the thread pool
     return 0;
 }
