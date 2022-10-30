@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//A function to compute the minimum of two integers
 int min(int a, int b)
 {
     return (a<b)?a:b;
@@ -49,22 +50,27 @@ void fcfs(int n, int bt[])
     printf("Average response time = %0.2f ",s);
 }
 
+// Function to implement Round Robin method of CPU Scheduling 
+//The function takes in 4 inputs, number of tasks, burst time for each, the quantum and sum
 void round_robin(int n, int bt[], int quant, int sum)
 {
-    int wt[n], copy_bt[n];
-    int tat[n];
-    int rt[n];
-    int  count =0;
-    int i, y=n;
-    int total_wt=0, total_tat=0, total_rt=0;
+    //intitalising variables for necessary computation
+    int wt[n], copy_bt[n]; //wt - waiting and a copy for the burst time
+    int tat[n]; // turn around time variable
+    int rt[n]; //respinse time
+    int  count =0; // a count variable
+    int i, y=n; 
+    int total_wt=0, total_tat=0, total_rt=0; //intialising variables for total waiting time, turnaround time, response time
 
-    rt[0] = 0;
-    copy_bt[0]=bt[0];
+    rt[0] = 0; //As the first process response time will always be 0
+    copy_bt[0]=bt[0]; //copying the first burst time into the copy variable
+    //For loop to compute the response time of the each process and simulatenously copy the rest of the burst time into the copy variable
     for(int j=1;j<n;j++)
     {
-        rt[j] = rt[j-1] + min(quant, bt[j-1]);
+        rt[j] = rt[j-1] + min(quant, bt[j-1]); //accounting for the case if the burst time is less than a quantum
         copy_bt[j]=bt[j];
     }
+    //Calculating Wait and Turnaround time
     for(sum=0, i = 0; y!=0; )
     {
         if(copy_bt[i] <= quant && copy_bt[i] > 0) // define the conditions
@@ -94,12 +100,11 @@ void round_robin(int n, int bt[], int quant, int sum)
             i++;
         }
     }
-
+    
+    // Printing out all the values and final result
     printf("\n\n\nFor Round Robin\n");
     printf("Processes   Burst time   Waiting time  Response Time   Turn around time\n");
-
-    // Calculate total waiting time and total turn
-    // around time
+    
     for (int  i=0; i<n; i++)
     {
         total_wt = total_wt + wt[i];
@@ -262,20 +267,29 @@ void priority(int n, int bt[], int prior[])
     printf("Average response time = %d ",s);
 }
 
+// Function to implement Priority Round Robin's round robin
+/*This function takes in multiple inputs. 
+  n -> number of tasks
+  start -> The starting index of the process with the same priotiy
+  bt -> burt time ; wt -> Wait Time ; rt -> Response time; tat -> Turnaround time
+  quant -> Quantum in ms ; sum -> Response time sum as of now*/
 void round_robin_for_priority(int n, int start, int bt[], int quant, int sum, int wt[],int rt[], int tat[])
 {
-    int copy_bt[n];
+    //initialising variables for computation through the function
+    int copy_bt[n]; // a copy for the burst time
     int  count =0;
     int i, y=n;
-    int total_wt=0, total_tat=0, total_rt=0;
+    int total_wt=0, total_tat=0, total_rt=0; // intialising variables for total waiting time, turnaround time, response time
 
-    rt[start] = 0 + sum;
-    copy_bt[0]=bt[start];
+    rt[start] = 0 + sum; //Inititalising the very first response time as the sum off all time that has passed 
+    copy_bt[0]=bt[start]; // copying Burst time into the secondary array
+    // For loop calculation and assigning values of response time for each task
     for(int j=start+1;j<n+start;j++)
     {
         rt[j] = rt[j-1] + min(quant, bt[j-1]);
         copy_bt[j-start]=bt[j];
     }
+    // Calculating turn around time and wait time
     for(i = 0; y!=0; )
     {
         if(copy_bt[i] <= quant && copy_bt[i] > 0) // define the conditions
@@ -309,7 +323,8 @@ void round_robin_for_priority(int n, int start, int bt[], int quant, int sum, in
 }
 
 
-
+// The main function to implement Priority Round Robin
+//The function takes the number of tasks, burst time, priotrity and the quantum time as input
 void priority_round_robin(int n, int bt[], int prior[], int quantum)
 {
     //declaring variables
@@ -320,7 +335,7 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
     i, j - loop variables
     temp - for storing swapping elements*/
 
-    // For loop deciding the order of execution of the tasks based on priority of each
+    // For loop deciding the order of execution of the tasks based on priority of each process
     for (i=1; i<=n;i++)
     {
         order[i-1] = i;
@@ -345,10 +360,11 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
             }
         }
     }
-    // intial task waiting time intialised to 0 as univerally true
+    // intial task waiting and response time intialised to 0 as univerally true
     wt[0] = 0;
     rt[0]=0;
-
+    
+    //Executing priotity and round robin scheduling
     for(int j=0;j<n;j++)
       {
         int start =j;
@@ -380,7 +396,6 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
           j=end;
         }
       }
-    //Computation fo wait time for each tasl
 
     //printing out the output
     printf("\n\n\nFor Priority based round robin Scheduling\n");
@@ -413,7 +428,11 @@ void priority_round_robin(int n, int bt[], int prior[], int quantum)
 
 int main()
 {
-    int n;
+    //Declaring variables
+    int n; //number of process
+    int quantum = 10; //defining the quantum time in ms
+    
+    //Accepting input from user regarding the process priority and burst time
     printf("Please enter the no of processes: ");
     scanf("%d", &n);
     int bt[n], prior[n], copy_bt[n], bt_sjf[n], prior_copy[n];
@@ -422,19 +441,22 @@ int main()
     {
         printf("T%d: ", i+1);
         scanf("%d %d",&prior[i], &bt[i]);
+        //Making duplicates of burst time and priority for call by reference
         copy_bt[i]=bt[i];
         bt_sjf[i]=bt[i];
         prior_copy[i]=prior[i];
 
     }
 
-    /*int n = 5;
+    /* TEST CASE
+    int n = 5;
     int bt[5]={20,30,10,15,90};
     int copy_bt[5]={20,30,10,15,90};
     int bt_sjf[5]={20,30,10,15,90};
     int prior[5] = {8, 3, 1, 3, 2};
     int prior_copy[5] ={8, 3, 1, 3, 2};*/
-    int quantum = 10;
+    
+    //Calling all the different implementation of CPU Scheduling
     fcfs (n, bt);
     round_robin(n, copy_bt, quantum,0);
     sjf (n, bt_sjf);
