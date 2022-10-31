@@ -31,7 +31,7 @@ task worktodo; //Used to store the work that has to be done, used in dequeue fun
 
 task enqwork; //used in pool submit while submitting work to pool
 
-// the worker bee
+// threads being declared 
 pthread_t bee1;
 pthread_t bee2;
 pthread_t bee3;
