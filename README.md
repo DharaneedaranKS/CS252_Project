@@ -28,8 +28,7 @@ CPU_Scheduling.c has to be run. It uses stdlib and stdio libraries.
 
 ## Project 2: Designing a threadpool
 The user file is client.c which has a set of predefined tasks such as add, print series of numbers, etc which is assigned in a sequence to a thread pool by calling the pool_submit function which is implemented in threadpool.c.<br /> In threadpool.c, we load the pthread, semaphores library as well as the programmer defined library threadpool.h. In the pool_submit function, the given task is added to the task queue which serves as a buffer. If the queue is full, it returns 1 and the task has to wait to be able to get added to the queue. The task is then assigned a thread from the thread pool by calling pthread_create which makes use of the worker function where a semaphore is made use of to remove a task from the queue and then execute it.<br />
-The function pool_init is used to initialise threads to the thread pool and the function pool_shutdown closes down the thread pool
-The thread is assigned to a particular task in the file threadpool.c which makes use of user defined library threadpool.h.
+The function pool_init is used to initialise threads to the thread pool and the function pool_shutdown closes down the thread pool <br />
 The makefile is used to build the project and generate the final binary "example".
 
 This project folder was taken from the github repo "https://github.com/xalstnx/3_1-operating-system-project2"
