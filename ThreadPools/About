@@ -1,10 +1,13 @@
 
 Complete Credits for all codes related to this folder to xalstnx ( Github Repo : https://github.com/xalstnx ) 
 
-The user file is client.c which has a set of predefined tasks such as add, print series of numbers, etc which is assigned in a sequence to a thread pool by calling the pool_submit function which is implemented in threadpool.c. <br />
+The user file is client.c which has a set of predefined tasks such as add, print series of numbers, etc which is assigned in a sequence to a thread pool by calling the pool_submit function which is implemented in threadpool.c.
+
 In threadpool.c, we load the pthread, semaphores library as well as the programmer defined library threadpool.h. In the pool_submit function, the given task is added to the task queue which serves as a buffer. If the queue is full, it returns 1 and the task has to wait to be able to get added to the queue. The task is then assigned a thread from the thread pool by calling pthread_create which makes use of the worker function where a semaphore is made use of to remove a task from the work queue and then execute the same.
-Enqueue and Dequeue functions have been written to add a task to the queue if the queue isn't full and to remove the first task from the queue respectively. A semaphore is used while adding a task to the queue. <br />
-The function pool_init is used to initialise threads to the thread pool and the function pool_shutdown closes down the thread pool by joining the threads with NULL thereby closing the threads. <br />
+Enqueue and Dequeue functions have been written to add a task to the queue if the queue isn't full and to remove the first task from the queue respectively. A semaphore is used while adding a task to the queue.
+
+The function pool_init is used to initialise threads to the thread pool and the function pool_shutdown closes down the thread pool by joining the threads with NULL thereby closing the threads. 
+
 The makefile is used to build the project and generate the final binary "example".
 
 make command has to be run to compile the project to generate a binary output file.
