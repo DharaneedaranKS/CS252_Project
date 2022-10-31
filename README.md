@@ -3,7 +3,7 @@
 This repository has implementation of two different projects:
 1. CPU Scheduling Implementation
 2. Designing a threadpool
-Each have been assigned a specific folder with all the required files within their respective folder 
+<br />Each have been assigned a specific folder with all the required files within their respective folder 
 
 ## Project 1: CPU Scheduling Algorithm
 
