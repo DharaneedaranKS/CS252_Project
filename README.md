@@ -1,6 +1,6 @@
 # CS252_Project
 ## About The Project
-The project has implementation of two different projects:
+This repository has implementation of two different projects:
 1. CPU Scheduling Implementation
 2. Designing a threadpool
 Each have been assigned a specific folder with all the required files within their respective folder 
